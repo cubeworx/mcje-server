@@ -2,7 +2,8 @@ FROM adoptopenjdk/openjdk16:alpine-jre
 
 ARG BUILD_DATE
 
-LABEL cbwx.announce.enable=true
+LABEL cbwx.announce.enable="true"
+LABEL cbwx.announce.type="java"
 LABEL org.opencontainers.image.authors="Cory Claflin"
 LABEL org.opencontainers.image.created=$BUILD_DATE
 LABEL org.opencontainers.image.licenses='MIT'
