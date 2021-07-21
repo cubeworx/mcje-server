@@ -1,5 +1,5 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/cubeworx/mcje-server.svg)](https://hub.docker.com/r/cubeworx/mcje-server)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/cubeworx/mcje-server/blob/master/LICENSE.md)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/cubeworx/mcje-server/blob/master/LICENSE)
 
 CubeWorx Minecraft Java Edition Server Image
 ==============
