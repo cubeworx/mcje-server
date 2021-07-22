@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk16:alpine-jre
+FROM adoptopenjdk:16-jre
 
 ARG BUILD_DATE
 
@@ -19,9 +19,11 @@ ENV MCJE_HOME="/mcje" \
     TZ="UTC" \
     VERSION="LATEST"
     
-RUN set -x && \
-    apk add --update --no-cache curl jq zip unzip && \
-    rm -rf /var/cache/apk/* && \
+RUN apt-get update && \
+    apt-get -y install curl jq unzip zip && \
+    apt-get -y autoremove && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
     mkdir -p $DATA_PATH
 
 WORKDIR $MCJE_HOME
