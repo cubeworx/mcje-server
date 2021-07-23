@@ -139,11 +139,21 @@ update_server_properties() {
   fi
   #GAME_MODE
   if [[ "x${GAME_MODE}" != "x" ]]; then
-    if [[ "x${GAME_MODE,,}" == "xsurvival" ]] || [[ "x${GAME_MODE,,}" == "xcreative" ]] || [[ "x${GAME_MODE,,}" == "xadventure" ]]; then
+    if [[ "x${GAME_MODE,,}" == "xsurvival" ]] || [[ "x${GAME_MODE,,}" == "xcreative" ]] || [[ "x${GAME_MODE,,}" == "xadventure" ]] || [[ "x${GAME_MODE,,}" == "xspectator" ]]; then
       sed -i "s/gamemode=.*/gamemode=${GAME_MODE}/" $SERVER_PROPERTIES
     else
       echo "ERROR: Invalid option for GAME_MODE!"
-      echo "Options are: 'survival', 'creative', or 'adventure'"
+      echo "Options are: 'survival', 'creative', 'adventure', or 'spectator'"
+      exit 1
+    fi
+  fi
+  #GENERATE_STRUCTURES
+  if [[ "x${GENERATE_STRUCTURES}" != "x" ]]; then
+    if [[ "x${GENERATE_STRUCTURES,,}" == "xtrue" ]] || [[ "x${GENERATE_STRUCTURES,,}" == "xfalse" ]]; then
+      sed -i "s/generate-structures=.*/generate-structures=${GENERATE_STRUCTURES}/" $SERVER_PROPERTIES
+    else
+      echo "ERROR: Invalid option for GENERATE_STRUCTURES!"
+      echo "Options are: 'true' or 'false'"
       exit 1
     fi
   fi
@@ -182,7 +192,7 @@ update_server_properties() {
   fi
   #LEVEL_TYPE
   if [[ "x${LEVEL_TYPE}" != "x" ]]; then
-    if [[ "x${LEVEL_TYPE,,}" == "xdefault" ]] || [[ "x${LEVEL_TYPE,,}" == "xflat" ]] || [[ "x${LEVEL_TYPE,,}" == "xlegacy" ]]; then
+    if [[ "x${LEVEL_TYPE,,}" == "xdefault" ]] || [[ "x${LEVEL_TYPE,,}" == "xflat" ]] || [[ "x${LEVEL_TYPE,,}" == "xlargebiomes" ]] || [[ "x${LEVEL_TYPE,,}" == "xamplified" ]]; then
       sed -i "s/level-type=.*/level-type=${LEVEL_TYPE^^}/" $SERVER_PROPERTIES
       #level-type missing from recent downloads, insert if env var exists
       if [[ $(cat $SERVER_PROPERTIES | grep "level-type" | wc -l) -eq 0 ]]; then
@@ -190,7 +200,7 @@ update_server_properties() {
       fi
     else
       echo "ERROR: Invalid option for LEVEL_TYPE!"
-      echo "Options are: 'default', 'flat', or 'legacy'"
+      echo "Options are: 'default', 'flat', 'largebiomes', or 'amplified'"
       exit 1
     fi
   fi

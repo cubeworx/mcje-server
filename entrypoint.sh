@@ -134,14 +134,14 @@ update_permissions() {
   fi
 }
 
-# #Check EULA
-# if [[ "x${EULA^^}" != "xTRUE" ]]; then
-#   echo "ERROR: EULA variable must be TRUE!"
-#   echo "See https://minecraft.net/terms"
-#   exit 1
-# else
+#Check EULA
+if [[ "x${EULA^^}" != "xTRUE" ]]; then
+  echo "ERROR: EULA variable must be TRUE!"
+  echo "See https://minecraft.net/terms"
+  exit 1
+else
     echo "eula=true" > $DATA_PATH/eula.txt
-# fi
+fi
 #Check necessary data directories
 for DIR_NAME in addons artifacts backups logs worlds ; do
   check_data_dir $DIR_NAME
@@ -167,23 +167,23 @@ init_server_properties
 #Update server.properties
 source $MCJE_HOME/scripts/server-properties.sh
 update_server_properties
-# #Update whitelist.json
-# update_whitelist
-# #Update permissions.json
-# update_permissions
-# #Check addons
+#Update whitelist.json
+update_whitelist
+#Update permissions.json
+update_permissions
+#Check addons
 source $MCJE_HOME/scripts/addons.sh
-# check_addons
-# #Check pack directories
-# for PACK_TYPE in behavior_packs resource_packs ; do
-#   check_pack_type $PACK_TYPE
-# done
+check_addons
+#Check pack directories
+for PACK_TYPE in behavior_packs resource_packs ; do
+  check_pack_type $PACK_TYPE
+done
 
 echo "Starting Minecraft Java Server Version ${VERSION} with the following configuration:"
 echo "########## SERVER PROPERTIES ##########"
 cat $SERVER_PROPERTIES | grep "=" | grep -v "\#" | sort
 echo "###############################"
-# echo ""
+echo ""
 # echo "########## WHITELIST ##########"
 # cat $SERVER_WHITELIST
 # echo "#################################"
@@ -191,16 +191,7 @@ echo "###############################"
 # echo "########## PERMISSIONS ##########"
 # cat $SERVER_PERMISSIONS
 # echo "#################################"
-# cd $SERVER_PATH/
-
 
 cd $SERVER_PATH/
 
-ls -alh
-
-#java -Xmx1024M -Xms1024M -jar $ARTIFACTS_PATH/minecraft_server.$VERSION.jar nogui
-
-ls -alh
-
-cat eula.txt
-cat server.properties
+java -Xmx1024M -Xms1024M -jar $ARTIFACTS_PATH/minecraft_server.$VERSION.jar nogui
