@@ -29,6 +29,7 @@ RUN apt-get update && \
 WORKDIR $MCJE_HOME
 
 ADD entrypoint.sh /
+ADD scripts/ $MCJE_HOME/scripts/
 ADD seeds.txt $MCJE_HOME/
 ADD versions.txt $MCJE_HOME/
 
