@@ -14,7 +14,6 @@ LABEL org.opencontainers.image.vendor='CubeWorx'
 ENV MCJE_HOME="/mcje" \
     DATA_PATH="/mcje/data" \
     LEVEL_NAME="Java-Level" \
-    MOTD="CubeWorx-MCJE" \
     SERVER_NAME="CubeWorx-MCJE" \
     SERVER_PORT=25565 \
     TZ="UTC" \

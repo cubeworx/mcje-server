@@ -7,6 +7,7 @@ MCJE_HOME=${MCJE_HOME:-"/mcbe"}
 ADDONS_PATH=${ADDONS_PATH:-"/mcje/data/addons"}
 ARTIFACTS_PATH=${ARTIFACTS_PATH:-"/mcje/data/artifacts"}
 DATA_PATH=${DATA_PATH:-"/mcje/data"}
+EXEC_NAME="cbwx-mcje-${SERVER_NAME// /-}-server"
 SEEDS_FILE=${SEEDS_FILE:-"/mcje/seeds.txt"}
 SERVER_PATH=${SERVER_PATH:-"/mcje/server"}
 SERVER_PERMISSIONS=${SERVER_WHITELIST:-"/mcje/server/permissions.json"}
@@ -85,6 +86,11 @@ prepare_server_path() {
   if [ ! -d "${SERVER_PATH}" ]; then
     mkdir -p $SERVER_PATH
   fi
+  JAVA_DIR=$(dirname $(which java))
+  if [ ! -L "${JAVA_DIR}/${EXEC_NAME}" ]; then
+    echo "Creating ${EXEC_NAME} symlink to java executable for easier host process identification."
+    ln -s $JAVA_DIR/java $JAVA_DIR/$EXEC_NAME
+  fi
   compare_version
   echo $VERSION > $DATA_PATH/version.txt
 }
@@ -96,8 +102,8 @@ compare_version() {
       DATE_TIME=$(date +%Y%m%d%H%M%S)
       echo "Previous version was ${OLD_VER}, current version is ${VERSION}"
       echo "Creating backup of data before version change."
-      echo "Backup file: ${DATA_PATH}/backups/${DATE_TIME}_${OLD_VER}_to_${VERSION}.mcworld"
-      zip -r $DATA_PATH/backups/${DATE_TIME}_${OLD_VER}_to_${VERSION}.mcworld $DATA_PATH/worlds
+      echo "Backup file: ${DATA_PATH}/backups/${DATE_TIME}_${LEVEL_NAME// /-}_${OLD_VER}_to_${VERSION}.mcworld"
+      zip -r $DATA_PATH/backups/${DATE_TIME}_${LEVEL_NAME// /-}_${OLD_VER}_to_${VERSION}.mcworld $DATA_PATH/worlds
     fi
   fi
 }
@@ -112,6 +118,7 @@ check_symlinks() {
 
 init_server_properties() {
   if [ ! -f "${SERVER_PROPERTIES}" ]; then
+    echo "Temporarily starting minecraft server to generate correct server.properties file for version."
     cd $SERVER_PATH
     java -jar $ARTIFACTS_PATH/minecraft_server.$VERSION.jar nogui --initSettings
     cd $MCJE_HOME
@@ -194,4 +201,4 @@ echo ""
 
 cd $SERVER_PATH/
 
-java -Xmx1024M -Xms1024M -jar $ARTIFACTS_PATH/minecraft_server.$VERSION.jar nogui
+$EXEC_NAME -Xmx1024M -Xms1024M -jar $ARTIFACTS_PATH/minecraft_server.$VERSION.jar nogui
