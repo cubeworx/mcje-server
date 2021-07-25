@@ -213,7 +213,10 @@ update_server_properties() {
       exit 1
     fi
   fi
-  #max-tick-time=
+  #MAX_TICK_TIME
+  if [[ "x${MAX_TICK_TIME}" != "x" ]]; then
+    sed -i "s/max-tick-time=.*/max-tick-time=${MAX_TICK_TIME}/" $SERVER_PROPERTIES
+  fi
   #MAX_WORLD_SIZE
   if [[ "x${MAX_WORLD_SIZE}" != "x" ]]; then
     if [[ "${MAX_WORLD_SIZE}" -gt 0 ]] && [[ "${MAX_WORLD_SIZE}" -lt 29999985 ]]; then
@@ -229,7 +232,10 @@ update_server_properties() {
   else
     sed -i "s/motd=.*/motd=${SERVER_NAME}/" $SERVER_PROPERTIES
   fi
-  #network-compression-threshold=
+  #NETWORK_COMPRESSION_THRESHOLD
+  if [[ "x${NETWORK_COMPRESSION_THRESHOLD}" != "x" ]]; then
+    sed -i "s/network-compression-threshold=.*/network-compression-threshold=${NETWORK_COMPRESSION_THRESHOLD}/" $SERVER_PROPERTIES
+  fi
   #ONLINE_MODE
   if [[ "x${ONLINE_MODE}" != "x" ]]; then
     if [[ "x${ONLINE_MODE,,}" == "xtrue" ]] || [[ "x${ONLINE_MODE,,}" == "xfalse" ]]; then
@@ -240,7 +246,15 @@ update_server_properties() {
       exit 1
     fi
   fi
-  #op-permission-level
+  #OP_PERMISSION_LEVEL
+  if [[ "x${OP_PERMISSION_LEVEL}" != "x" ]]; then
+    if [[ "${OP_PERMISSION_LEVEL}" =~ ^[0-4]+$ ]]; then
+      sed -i "s/op-permission-level=.*/op-permission-level=${OP_PERMISSION_LEVEL}/" $SERVER_PROPERTIES
+    else
+      echo "ERROR: OP_PERMISSION_LEVEL must be zero or a positive number less than 5!"
+      exit 1
+    fi
+  fi
   #PLAYER_IDLE_TIMEOUT
   if [[ "x${PLAYER_IDLE_TIMEOUT}" != "x" ]]; then
     if [[ "${PLAYER_IDLE_TIMEOUT}" =~ ^[0-9]+$ ]]; then
@@ -288,7 +302,10 @@ update_server_properties() {
       exit 1
     fi
   fi
-# rcon.password=
+  #RCON_PASSWORD
+  if [[ "x${RCON_PASSWORD}" != "x" ]]; then
+    sed -i "s/rcon.password=.*/rcon.password=${RCON_PASSWORD}/" $SERVER_PROPERTIES
+  fi
   #RCON_PORT
   if [[ "x${RCON_PORT}" != "x" ]]; then
     if [[ "${RCON_PORT}" -gt 0 ]] && [[ "${RCON_PORT}" -lt 65536 ]]; then
@@ -308,10 +325,18 @@ update_server_properties() {
       exit 1
     fi
   fi
-# resource-pack-prompt=
-# resource-pack-sha1=
-# resource-pack=
-# server-ip=
+  #RESOURCE_PACK
+  if [[ "x${RESOURCE_PACK}" != "x" ]]; then
+    sed -i "s/resource-pack=.*/resource-pack=${RESOURCE_PACK}/" $SERVER_PROPERTIES
+  fi
+  #RESOURCE_PACK_PROMPT
+  if [[ "x${RESOURCE_PACK_PROMPT}" != "x" ]]; then
+    sed -i "s/resource-pack-prompt=.*/resource-pack-prompt=${RESOURCE_PACK_PROMPT}/" $SERVER_PROPERTIES
+  fi
+  #RESOURCE_PACK_SHA1
+  if [[ "x${RESOURCE_PACK_SHA1}" != "x" ]]; then
+    sed -i "s/resource-pack-sha1=.*/resource-pack-sha1=${RESOURCE_PACK_SHA1}/" $SERVER_PROPERTIES
+  fi
   #SERVER_PORT
   if [[ "x${SERVER_PORT}" != "x" ]]; then
     if [[ "${SERVER_PORT}" -gt 0 ]] && [[ "${SERVER_PORT}" -lt 65536 ]]; then
@@ -361,7 +386,15 @@ update_server_properties() {
       exit 1
     fi
   fi
-# spawn-protection=16
+  #SPAWN_PROTECTION
+  if [[ "x${SPAWN_PROTECTION}" != "x" ]]; then
+    if [[ "${SPAWN_PROTECTION}" =~ ^[0-9]+$ ]]; then
+      sed -i "s/spawn-protection=.*/spawn-protection=${SPAWN_PROTECTION}/" $SERVER_PROPERTIES
+    else
+      echo "ERROR: SPAWN_PROTECTION must be a positive number!"
+      exit 1
+    fi
+  fi
   #SYNC_CHUNK_WRITES
   if [[ "x${SYNC_CHUNK_WRITES}" != "x" ]]; then
     if [[ "x${SYNC_CHUNK_WRITES,,}" == "xtrue" ]] || [[ "x${SYNC_CHUNK_WRITES,,}" == "xfalse" ]]; then
@@ -372,7 +405,10 @@ update_server_properties() {
       exit 1
     fi
   fi
-# text-filtering-config=
+  #TEXT_FILTERING_CONFIG
+  if [[ "x${TEXT_FILTERING_CONFIG}" != "x" ]]; then
+    sed -i "s/text-filtering-config=.*/text-filtering-config=${TEXT_FILTERING_CONFIG}/" $SERVER_PROPERTIES
+  fi
   #USE_NATIVE_TRANSPORT
   if [[ "x${USE_NATIVE_TRANSPORT}" != "x" ]]; then
     if [[ "x${USE_NATIVE_TRANSPORT,,}" == "xtrue" ]] || [[ "x${USE_NATIVE_TRANSPORT,,}" == "xfalse" ]]; then
@@ -388,21 +424,21 @@ update_server_properties() {
     if [[ "${VIEW_DISTANCE}" -gt 2 ]] && [[ "${VIEW_DISTANCE}" -lt 33 ]]; then
       sed -i "s/view-distance=.*/view-distance=${VIEW_DISTANCE}/" $SERVER_PROPERTIES
     else
-      echo "ERROR: VIEW_DISTANCE must be a positive number greater than 4!"
+      echo "ERROR: VIEW_DISTANCE must be a positive number between 3-32!"
       exit 1
     fi
   fi
-  #WHITE_LIST
-  if [[ "x${WHITE_LIST}" != "x" ]]; then
-    if [[ "x${WHITE_LIST,,}" == "xtrue" ]] || [[ "x${WHITE_LIST,,}" == "xfalse" ]]; then
-      if [[ "x${WHITE_LIST,,}" == "xtrue" ]] && [[ "x${WHITELIST_USERS}" == "x" ]]; then
-        echo "ERROR: If WHITE_LIST is true then WHITELIST_USERS cannot be empty!"
+  #WHITELIST_ENABLE
+  if [[ "x${WHITELIST_ENABLE}" != "x" ]]; then
+    if [[ "x${WHITELIST_ENABLE,,}" == "xtrue" ]] || [[ "x${WHITELIST_ENABLE,,}" == "xfalse" ]]; then
+      if [[ "x${WHITELIST_ENABLE,,}" == "xtrue" ]] && [[ "x${WHITELIST_USERS}" == "x" ]]; then
+        echo "ERROR: If WHITELIST_ENABLE is true then WHITELIST_USERS cannot be empty!"
         exit 1
       else
-        sed -i "s/white-list=.*/white-list=${WHITE_LIST}/" $SERVER_PROPERTIES
+        sed -i "s/white-list=.*/white-list=${WHITELIST_ENABLE}/" $SERVER_PROPERTIES
       fi
     else
-      echo "ERROR: Invalid option for WHITE_LIST!"
+      echo "ERROR: Invalid option for WHITELIST_ENABLE!"
       echo "Options are: 'true' or 'false'"
       exit 1
     fi

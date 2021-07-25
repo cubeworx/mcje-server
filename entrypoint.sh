@@ -129,7 +129,7 @@ init_server_properties() {
 }
 
 update_whitelist() {
-  if [[ "x${WHITELIST_USERS}" != "x" ]] && [[ "x${WHITE_LIST,,}" == "xtrue" ]]; then
+  if [[ "x${WHITELIST_USERS}" != "x" ]] && [[ "x${WHITELIST_ENABLE,,}" == "xtrue" ]]; then
     jq -n --arg users "${WHITELIST_USERS}" '$users | split(",") | map({"name": .})' > $SERVER_WHITELIST
   else
     echo "[]" > $SERVER_WHITELIST
