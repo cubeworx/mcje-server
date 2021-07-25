@@ -8,9 +8,12 @@ ADDONS_PATH=${ADDONS_PATH:-"/mcje/data/addons"}
 ARTIFACTS_PATH=${ARTIFACTS_PATH:-"/mcje/data/artifacts"}
 DATA_PATH=${DATA_PATH:-"/mcje/data"}
 EXEC_NAME="cbwx-mcje-${SERVER_NAME// /-}-server"
+JVM_MAX_MEMORY=${JVM_MAX_MEMORY:-"1024M"}
+JVM_MIN_MEMORY=${JVM_MIN_MEMORY:-"1024M"}
+JVM_OPTS=${JVM_OPTS:-""}
 SEEDS_FILE=${SEEDS_FILE:-"/mcje/seeds.txt"}
 SERVER_PATH=${SERVER_PATH:-"/mcje/server"}
-SERVER_PERMISSIONS=${SERVER_WHITELIST:-"/mcje/server/permissions.json"}
+SERVER_PERMISSIONS=${SERVER_WHITELIST:-"/mcje/server/ops.json"}
 SERVER_PROPERTIES=${SERVER_PROPERTIES:-"/mcje/server/server.properties"}
 SERVER_WHITELIST=${SERVER_WHITELIST:-"/mcje/server/whitelist.json"}
 VERSION=${VERSION:-"LATEST"}
@@ -128,6 +131,8 @@ init_server_properties() {
 update_whitelist() {
   if [[ "x${WHITELIST_USERS}" != "x" ]] && [[ "x${WHITE_LIST,,}" == "xtrue" ]]; then
     jq -n --arg users "${WHITELIST_USERS}" '$users | split(",") | map({"name": .})' > $SERVER_WHITELIST
+  else
+    echo "[]" > $SERVER_WHITELIST
   fi
 }
 
@@ -138,6 +143,8 @@ update_permissions() {
     [$members   | split(",") | map({permission: "member", xuid:.})],
     [$visitors  | split(",") | map({permission: "visitor", xuid:.})]
     ]| flatten' > $SERVER_PERMISSIONS
+  else
+    echo "[]" > $SERVER_PERMISSIONS
   fi
 }
 
@@ -153,24 +160,30 @@ fi
 for DIR_NAME in addons artifacts backups logs worlds ; do
   check_data_dir $DIR_NAME
 done
-#If not initialized
-#Determine download version
-VERSIONS_DATA=$(curl -fsSL -A "cubeworx/mcje-server" -H "accept-language:*" $VERSIONS_URL)
-if [[ "x${VERSION}" == "xLATEST" ]]; then
-  get_latest_version
-else
-  if [ ! -f "${ARTIFACTS_PATH}/minecraft_server.${VERSION}.jar" ]; then
-    get_version_info $VERSION
+#Check if already initialized
+if [ ! -f "${SERVER_PATH}/usercache.json" ]; then
+  #Determine download version
+  VERSIONS_DATA=$(curl -fsSL -A "cubeworx/mcje-server" -H "accept-language:*" $VERSIONS_URL)
+  if [[ "x${VERSION}" == "xLATEST" ]]; then
+    get_latest_version
+  else
+    if [ ! -f "${ARTIFACTS_PATH}/minecraft_server.${VERSION}.jar" ]; then
+      get_version_info $VERSION
+    fi
   fi
+  prepare_server_path
+  # #Check necessary symlinks
+  for LINK_NAME in eula.txt logs worlds ; do
+    check_symlinks $LINK_NAME
+  done
+  #Create properties file for specific version
+  init_server_properties
+else
+  #If already initialized, need to read in version
+  echo "###########################################"
+  echo "Already initialized. Did container restart?"
+  VERSION=$(cat $DATA_PATH/version.txt)
 fi
-prepare_server_path
-# #Check necessary symlinks
-for LINK_NAME in eula.txt logs worlds ; do
-  check_symlinks $LINK_NAME
-done
-#Create properties file for specific version
-init_server_properties
-#fi
 #Update server.properties
 source $MCJE_HOME/scripts/server-properties.sh
 update_server_properties
@@ -185,20 +198,22 @@ check_addons
 for PACK_TYPE in behavior_packs resource_packs ; do
   check_pack_type $PACK_TYPE
 done
-
+#Configure logging
+source $MCJE_HOME/scripts/logging.sh
+configure_logging
 echo "Starting Minecraft Java Server Version ${VERSION} with the following configuration:"
 echo "########## SERVER PROPERTIES ##########"
 cat $SERVER_PROPERTIES | grep "=" | grep -v "\#" | sort
 echo "###############################"
 echo ""
-# echo "########## WHITELIST ##########"
-# cat $SERVER_WHITELIST
-# echo "#################################"
-# echo ""
-# echo "########## PERMISSIONS ##########"
-# cat $SERVER_PERMISSIONS
-# echo "#################################"
+echo "########## WHITELIST ##########"
+cat $SERVER_WHITELIST
+echo "#################################"
+echo ""
+echo "########## PERMISSIONS ##########"
+cat $SERVER_PERMISSIONS
+echo "#################################"
 
 cd $SERVER_PATH/
 
-$EXEC_NAME -Xmx1024M -Xms1024M -jar $ARTIFACTS_PATH/minecraft_server.$VERSION.jar nogui
+$EXEC_NAME -Xms$JVM_MIN_MEMORY -Xmx$JVM_MAX_MEMORY $JVM_OPTS -jar $ARTIFACTS_PATH/minecraft_server.$VERSION.jar nogui

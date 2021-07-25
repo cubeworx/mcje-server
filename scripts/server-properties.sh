@@ -226,7 +226,6 @@ update_server_properties() {
   #MOTD
   if [[ "x${MOTD}" != "x" ]]; then
     sed -i "s/motd=.*/motd=${MOTD}/" $SERVER_PROPERTIES
-    #TODO: Add logic to check for legal file names
   else
     sed -i "s/motd=.*/motd=${SERVER_NAME}/" $SERVER_PROPERTIES
   fi
