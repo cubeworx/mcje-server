@@ -431,10 +431,11 @@ update_server_properties() {
   #WHITELIST_ENABLE
   if [[ "x${WHITELIST_ENABLE}" != "x" ]]; then
     if [[ "x${WHITELIST_ENABLE,,}" == "xtrue" ]] || [[ "x${WHITELIST_ENABLE,,}" == "xfalse" ]]; then
-      if [[ "x${WHITELIST_ENABLE,,}" == "xtrue" ]] && [[ "x${WHITELIST_USERS}" == "x" ]]; then
-        echo "ERROR: If WHITELIST_ENABLE is true then WHITELIST_USERS cannot be empty!"
-        exit 1
-      else
+      if [[ "x${WHITELIST_ENABLE,,}" == "xtrue" ]]; then
+        if [[ "x${WHITELIST_USERS}" == "x" ]] && [[ "x${OPERATORS}" == "x" ]]; then
+          echo "ERROR: If WHITELIST_ENABLE is true then either WHITELIST_USERS or OPERATORS must not be empty!"
+          exit 1
+        fi
         sed -i "s/white-list=.*/white-list=${WHITELIST_ENABLE}/" $SERVER_PROPERTIES
       fi
     else

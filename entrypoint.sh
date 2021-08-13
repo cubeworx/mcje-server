@@ -3,7 +3,7 @@
 set -e
 
 EULA=$EULA
-MCJE_HOME=${MCJE_HOME:-"/mcbe"}
+MCJE_HOME=${MCJE_HOME:-"/mcje"}
 ADDONS_PATH=${ADDONS_PATH:-"/mcje/data/addons"}
 ARTIFACTS_PATH=${ARTIFACTS_PATH:-"/mcje/data/artifacts"}
 DATA_PATH=${DATA_PATH:-"/mcje/data"}
@@ -11,14 +11,21 @@ EXEC_NAME="cbwx-mcje-${SERVER_NAME// /-}-server"
 JVM_MAX_MEMORY=${JVM_MAX_MEMORY:-"1024M"}
 JVM_MIN_MEMORY=${JVM_MIN_MEMORY:-"1024M"}
 JVM_OPTS=${JVM_OPTS:-""}
+OPERATORS_FILE=${OPERATORS_FILE:-"/mcje/data/ops.json"}
+OPERATORS_LOOKUP=${OPERATORS_LOOKUP:-"true"}
+OPERATORS_MODE=${OPERATORS_MODE:-"static"}
 SEEDS_FILE=${SEEDS_FILE:-"/mcje/seeds.txt"}
 SERVER_PATH=${SERVER_PATH:-"/mcje/server"}
-SERVER_PERMISSIONS=${SERVER_WHITELIST:-"/mcje/server/ops.json"}
 SERVER_PROPERTIES=${SERVER_PROPERTIES:-"/mcje/server/server.properties"}
-SERVER_WHITELIST=${SERVER_WHITELIST:-"/mcje/server/whitelist.json"}
+USER_LOOKUP_URL=${USER_LOOKUP_URL:-"https://api.cubeworx.io/mcje/lookup/username"}
+UUID_LOOKUP_URL=${UUID_LOOKUP_URL:-"https://api.cubeworx.io/mcje/lookup/uuid"}
 VERSION=${VERSION:-"LATEST"}
 VERSIONS_FILE=${VERSIONS_FILE:-"/mcje/versions.txt"}
 VERSIONS_URL=${VERSIONS_URL:-"https://launchermeta.mojang.com/mc/game/version_manifest.json"}
+WHITELIST_ENABLE=${WHITELIST_ENABLE:-"false"}
+WHITELIST_FILE=${WHITELIST_FILE:-"/mcje/data/whitelist.json"}
+WHITELIST_LOOKUP=${WHITELIST_LOOKUP:-"true"}
+WHITELIST_MODE=${WHITELIST_MODE:-"static"}
 
 check_data_dir() {
   DIR_NAME=$1
@@ -98,6 +105,16 @@ prepare_server_path() {
   echo $VERSION > $DATA_PATH/version.txt
 }
 
+prepare_world_level_path() {
+  if [ ! -d "${DATA_PATH}/worlds/${LEVEL_NAME}" ]; then
+    mkdir -p $DATA_PATH/worlds/$LEVEL_NAME
+  fi
+  if [ ! -L "${SERVER_PATH}/${LEVEL_NAME}" ]; then
+    echo "Creating symlink ${SERVER_PATH}/${LEVEL_NAME} to ${DATA_PATH}/worlds/${LEVEL_NAME}"
+    ln -s $DATA_PATH/worlds/$LEVEL_NAME $SERVER_PATH/$LEVEL_NAME
+  fi
+}
+
 compare_version() {
   if [ -f "${DATA_PATH}/version.txt" ]; then
     OLD_VER=$(cat $DATA_PATH/version.txt)
@@ -128,33 +145,13 @@ init_server_properties() {
   fi
 }
 
-update_whitelist() {
-  if [[ "x${WHITELIST_USERS}" != "x" ]] && [[ "x${WHITELIST_ENABLE,,}" == "xtrue" ]]; then
-    jq -n --arg users "${WHITELIST_USERS}" '$users | split(",") | map({"name": .})' > $SERVER_WHITELIST
-  else
-    echo "[]" > $SERVER_WHITELIST
-  fi
-}
-
-update_permissions() {
-  if [[ "x${OPERATORS}" != "x" ]] || [[ "x${MEMBERS}" != "x" ]] || [[ "x${VISITORS}" != "x" ]]; then
-    jq -n --arg operators "$OPERATORS" --arg members "$MEMBERS" --arg visitors "$VISITORS" '[
-    [$operators | split(",") | map({permission: "operator", xuid:.})],
-    [$members   | split(",") | map({permission: "member", xuid:.})],
-    [$visitors  | split(",") | map({permission: "visitor", xuid:.})]
-    ]| flatten' > $SERVER_PERMISSIONS
-  else
-    echo "[]" > $SERVER_PERMISSIONS
-  fi
-}
-
 #Check EULA
 if [[ "x${EULA^^}" != "xTRUE" ]]; then
   echo "ERROR: EULA variable must be TRUE!"
   echo "See https://minecraft.net/terms"
   exit 1
 else
-    echo "eula=true" > $DATA_PATH/eula.txt
+  echo "eula=true" > $DATA_PATH/eula.txt
 fi
 #Check necessary data directories
 for DIR_NAME in addons artifacts backups logs worlds ; do
@@ -162,9 +159,10 @@ for DIR_NAME in addons artifacts backups logs worlds ; do
 done
 #Check if already initialized
 if [ ! -f "${SERVER_PATH}/usercache.json" ]; then
+  SERVER_INITIALIZED="false"
   #Determine download version
   VERSIONS_DATA=$(curl -fsSL -A "cubeworx/mcje-server" -H "accept-language:*" $VERSIONS_URL)
-  if [[ "x${VERSION}" == "xLATEST" ]]; then
+  if [[ "x${VERSION^^}" == "xLATEST" ]]; then
     get_latest_version
   else
     if [ ! -f "${ARTIFACTS_PATH}/minecraft_server.${VERSION}.jar" ]; then
@@ -172,14 +170,16 @@ if [ ! -f "${SERVER_PATH}/usercache.json" ]; then
     fi
   fi
   prepare_server_path
+  prepare_world_level_path
   # #Check necessary symlinks
-  for LINK_NAME in eula.txt logs worlds ; do
+  for LINK_NAME in eula.txt logs ops.json whitelist.json ; do
     check_symlinks $LINK_NAME
   done
   #Create properties file for specific version
   init_server_properties
 else
-  #If already initialized, need to read in version
+  #If already initialized, need to read in version & not lookup users
+  SERVER_INITIALIZED="true"
   echo "###########################################"
   echo "Already initialized. Did container restart?"
   VERSION=$(cat $DATA_PATH/version.txt)
@@ -187,17 +187,11 @@ fi
 #Update server.properties
 source $MCJE_HOME/scripts/server-properties.sh
 update_server_properties
-#Update whitelist.json
-update_whitelist
-#Update permissions.json
-update_permissions
-#Check addons
-source $MCJE_HOME/scripts/addons.sh
-check_addons
-#Check pack directories
-for PACK_TYPE in behavior_packs resource_packs ; do
-  check_pack_type $PACK_TYPE
-done
+#Check operators & whitelist
+source $MCJE_HOME/scripts/operators-whitelist.sh
+check_whitelist
+check_operators
+create_cache_files
 #Configure logging
 source $MCJE_HOME/scripts/logging.sh
 configure_logging
@@ -206,12 +200,12 @@ echo "########## SERVER PROPERTIES ##########"
 cat $SERVER_PROPERTIES | grep "=" | grep -v "\#" | sort
 echo "###############################"
 echo ""
-echo "########## WHITELIST ##########"
-cat $SERVER_WHITELIST
+echo "########## OPERATORS ##########"
+cat $OPERATORS_FILE
 echo "#################################"
 echo ""
-echo "########## PERMISSIONS ##########"
-cat $SERVER_PERMISSIONS
+echo "########## WHITELIST ##########"
+cat $WHITELIST_FILE
 echo "#################################"
 
 cd $SERVER_PATH/
