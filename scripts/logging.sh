@@ -6,6 +6,9 @@ cat << EOF > $SERVER_PATH/log4j2.xml
         <Console name="SysOut" target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %msg%n" />
         </Console>
+        <Queue name="TerminalConsole">
+            <PatternLayout pattern="[%d{HH:mm:ss} %level]: %msg%n" />
+        </Queue>
         <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log">
             <PatternLayout pattern="[%d{yyyy/MM/dd HH:mm:ss}] [%t/%level]: %msg%n" />
             <Policies>
@@ -26,6 +29,7 @@ cat << EOF > $SERVER_PATH/log4j2.xml
             </filters>
             <AppenderRef ref="SysOut"/>
             <AppenderRef ref="File"/>
+            <AppenderRef ref="TerminalConsole"/>
         </Root>
     </Loggers>
 </Configuration>
