@@ -1,4 +1,4 @@
-FROM adoptopenjdk:16-jre
+FROM eclipse-temurin:17-jdk
 
 ARG BUILD_DATE
 
@@ -24,7 +24,7 @@ RUN apt-get update && \
     apt-get -y autoremove && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    curl -sL https://github.com/itzg/mc-monitor/releases/download/0.9.0/mc-monitor_0.9.0_linux_amd64.tar.gz -o mc-monitor.tar.gz && \
+    curl -sL https://github.com/itzg/mc-monitor/releases/download/0.10.3/mc-monitor_0.10.3_linux_amd64.tar.gz -o mc-monitor.tar.gz && \
     mkdir /itzg-mc-monitor && \
     tar -xzvf mc-monitor.tar.gz --directory=/itzg-mc-monitor && \
     rm -rf mc-monitor.tar.gz && \
