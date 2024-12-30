@@ -1,8 +1,19 @@
 update_server_properties() {
+  echo "Updating server.properties file."
+  #ACCEPT_TRANSFERS
+  if [[ -n $ACCEPT_TRANSFERS ]]; then
+    if [[ "${ACCEPT_TRANSFERS,,}" == "true" ]] || [[ "${ACCEPT_TRANSFERS,,}" == "false" ]]; then
+      sed -i "s/accepts-transfers=.*/accepts-transfers=${ACCEPT_TRANSFERS}/" "${SERVER_PROPERTIES}"
+    else
+      echo "ERROR: Invalid option for ACCEPT_TRANSFERS!"
+      echo "Options are: 'true' or 'false'"
+      exit 1
+    fi
+  fi
   #ALLOW_FLIGHT
-  if [[ "x${ALLOW_FLIGHT}" != "x" ]]; then
-    if [[ "x${ALLOW_FLIGHT,,}" == "xtrue" ]] || [[ "x${ALLOW_FLIGHT,,}" == "xfalse" ]]; then
-      sed -i "s/allow-flight=.*/allow-flight=${ALLOW_FLIGHT}/" $SERVER_PROPERTIES
+  if [[ -n $ALLOW_FLIGHT ]]; then
+    if [[ "${ALLOW_FLIGHT,,}" == "true" ]] || [[ "${ALLOW_FLIGHT,,}" == "false" ]]; then
+      sed -i "s/allow-flight=.*/allow-flight=${ALLOW_FLIGHT}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for ALLOW_FLIGHT!"
       echo "Options are: 'true' or 'false'"
@@ -10,9 +21,9 @@ update_server_properties() {
     fi
   fi
   #ALLOW_NETHER
-  if [[ "x${ALLOW_NETHER}" != "x" ]]; then
-    if [[ "x${ALLOW_NETHER,,}" == "xtrue" ]] || [[ "x${ALLOW_NETHER,,}" == "xfalse" ]]; then
-      sed -i "s/allow-nether=.*/allow-nether=${ALLOW_NETHER}/" $SERVER_PROPERTIES
+  if [[ -n $ALLOW_NETHER ]]; then
+    if [[ "${ALLOW_NETHER,,}" == "true" ]] || [[ "${ALLOW_NETHER,,}" == "false" ]]; then
+      sed -i "s/allow-nether=.*/allow-nether=${ALLOW_NETHER}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for ALLOW_NETHER!"
       echo "Options are: 'true' or 'false'"
@@ -20,9 +31,9 @@ update_server_properties() {
     fi
   fi
   #BROADCAST_CONSOLE_TO_OPS
-  if [[ "x${BROADCAST_CONSOLE_TO_OPS}" != "x" ]]; then
-    if [[ "x${BROADCAST_CONSOLE_TO_OPS,,}" == "xtrue" ]] || [[ "x${BROADCAST_CONSOLE_TO_OPS,,}" == "xfalse" ]]; then
-      sed -i "s/broadcast-console-to-ops=.*/broadcast-console-to-ops=${BROADCAST_CONSOLE_TO_OPS}/" $SERVER_PROPERTIES
+  if [[ -n $BROADCAST_CONSOLE_TO_OPS ]]; then
+    if [[ "${BROADCAST_CONSOLE_TO_OPS,,}" == "true" ]] || [[ "${BROADCAST_CONSOLE_TO_OPS,,}" == "false" ]]; then
+      sed -i "s/broadcast-console-to-ops=.*/broadcast-console-to-ops=${BROADCAST_CONSOLE_TO_OPS}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for BROADCAST_CONSOLE_TO_OPS!"
       echo "Options are: 'true' or 'false'"
@@ -30,19 +41,19 @@ update_server_properties() {
     fi
   fi
   #BROADCAST_RCON_TO_OPS
-  if [[ "x${BROADCAST_RCON_TO_OPS}" != "x" ]]; then
-    if [[ "x${BROADCAST_RCON_TO_OPS,,}" == "xtrue" ]] || [[ "x${BROADCAST_RCON_TO_OPS,,}" == "xfalse" ]]; then
-      sed -i "s/broadcast-rcon-to-ops=.*/broadcast-rcon-to-ops=${BROADCAST_RCON_TO_OPS}/" $SERVER_PROPERTIES
+  if [[ -n $BROADCAST_RCON_TO_OPS ]]; then
+    if [[ "${BROADCAST_RCON_TO_OPS,,}" == "true" ]] || [[ "${BROADCAST_RCON_TO_OPS,,}" == "false" ]]; then
+      sed -i "s/broadcast-rcon-to-ops=.*/broadcast-rcon-to-ops=${BROADCAST_RCON_TO_OPS}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for BROADCAST_RCON_TO_OPS!"
       echo "Options are: 'true' or 'false'"
       exit 1
     fi
   fi
-  #DIFFICULTY
-  if [[ "x${DIFFICULTY}" != "x" ]]; then
-    if [[ "x${DIFFICULTY,,}" == "xpeaceful" ]] || [[ "x${DIFFICULTY,,}" == "xeasy" ]] || [[ "x${DIFFICULTY,,}" == "xnormal" ]] || [[ "x${DIFFICULTY,,}" == "xhard" ]]; then
-      sed -i "s/difficulty=.*/difficulty=${DIFFICULTY}/" $SERVER_PROPERTIES
+  #DIFFICULTY - Added 1.14 (18w48a)
+  if [[ -n $DIFFICULTY ]]; then
+    if [[ "${DIFFICULTY,,}" == "peaceful" ]] || [[ "${DIFFICULTY,,}" == "easy" ]] || [[ "${DIFFICULTY,,}" == "normal" ]] || [[ "${DIFFICULTY,,}" == "hard" ]]; then
+      sed -i "s/difficulty=.*/difficulty=${DIFFICULTY}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for DIFFICULTY!"
       echo "Options are: 'peaceful', 'easy', 'normal', or 'hard'"
@@ -50,9 +61,9 @@ update_server_properties() {
     fi
   fi
   #ENABLE_COMMAND_BLOCK
-  if [[ "x${ENABLE_COMMAND_BLOCK}" != "x" ]]; then
-    if [[ "x${ENABLE_COMMAND_BLOCK,,}" == "xtrue" ]] || [[ "x${ENABLE_COMMAND_BLOCK,,}" == "xfalse" ]]; then
-      sed -i "s/enable-command-block=.*/enable-command-block=${ENABLE_COMMAND_BLOCK}/" $SERVER_PROPERTIES
+  if [[ -n $ENABLE_COMMAND_BLOCK ]]; then
+    if [[ "${ENABLE_COMMAND_BLOCK,,}" == "true" ]] || [[ "${ENABLE_COMMAND_BLOCK,,}" == "false" ]]; then
+      sed -i "s/enable-command-block=.*/enable-command-block=${ENABLE_COMMAND_BLOCK}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for ENABLE_COMMAND_BLOCK!"
       echo "Options are: 'true' or 'false'"
@@ -60,9 +71,9 @@ update_server_properties() {
     fi
   fi
   #ENABLE_JMX_MONITORING
-  if [[ "x${ENABLE_JMX_MONITORING}" != "x" ]]; then
-    if [[ "x${ENABLE_JMX_MONITORING,,}" == "xtrue" ]] || [[ "x${ENABLE_JMX_MONITORING,,}" == "xfalse" ]]; then
-      sed -i "s/enable-jmx-monitoring=.*/enable-jmx-monitoring=${ENABLE_JMX_MONITORING}/" $SERVER_PROPERTIES
+  if [[ -n $ENABLE_JMX_MONITORING ]]; then
+    if [[ "${ENABLE_JMX_MONITORING,,}" == "true" ]] || [[ "${ENABLE_JMX_MONITORING,,}" == "false" ]]; then
+      sed -i "s/enable-jmx-monitoring=.*/enable-jmx-monitoring=${ENABLE_JMX_MONITORING}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for ENABLE_JMX_MONITORING!"
       echo "Options are: 'true' or 'false'"
@@ -70,9 +81,9 @@ update_server_properties() {
     fi
   fi
   #ENABLE_QUERY
-  if [[ "x${ENABLE_QUERY}" != "x" ]]; then
-    if [[ "x${ENABLE_QUERY,,}" == "xtrue" ]] || [[ "x${ENABLE_QUERY,,}" == "xfalse" ]]; then
-      sed -i "s/enable-query=.*/enable-query=${ENABLE_QUERY}/" $SERVER_PROPERTIES
+  if [[ -n $ENABLE_QUERY ]]; then
+    if [[ "${ENABLE_QUERY,,}" == "true" ]] || [[ "${ENABLE_QUERY,,}" == "false" ]]; then
+      sed -i "s/enable-query=.*/enable-query=${ENABLE_QUERY}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for ENABLE_QUERY!"
       echo "Options are: 'true' or 'false'"
@@ -80,9 +91,9 @@ update_server_properties() {
     fi
   fi
   #ENABLE_RCON
-  if [[ "x${ENABLE_RCON}" != "x" ]]; then
-    if [[ "x${ENABLE_RCON,,}" == "xtrue" ]] || [[ "x${ENABLE_RCON,,}" == "xfalse" ]]; then
-      sed -i "s/enable-rcon=.*/enable-rcon=${ENABLE_RCON}/" $SERVER_PROPERTIES
+  if [[ -n $ENABLE_RCON ]]; then
+    if [[ "${ENABLE_RCON,,}" == "true" ]] || [[ "${ENABLE_RCON,,}" == "false" ]]; then
+      sed -i "s/enable-rcon=.*/enable-rcon=${ENABLE_RCON}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for ENABLE_RCON!"
       echo "Options are: 'true' or 'false'"
@@ -90,19 +101,29 @@ update_server_properties() {
     fi
   fi
   #ENABLE_STATUS
-  if [[ "x${ENABLE_STATUS}" != "x" ]]; then
-    if [[ "x${ENABLE_STATUS,,}" == "xtrue" ]] || [[ "x${ENABLE_STATUS,,}" == "xfalse" ]]; then
-      sed -i "s/enable-status=.*/enable-status=${ENABLE_STATUS}/" $SERVER_PROPERTIES
+  if [[ -n $ENABLE_STATUS ]]; then
+    if [[ "${ENABLE_STATUS,,}" == "true" ]] || [[ "${ENABLE_STATUS,,}" == "false" ]]; then
+      sed -i "s/enable-status=.*/enable-status=${ENABLE_STATUS}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for ENABLE_STATUS!"
       echo "Options are: 'true' or 'false'"
       exit 1
     fi
   fi
+  #ENFORCE_SECURE_PROFILE - Added 1.19 (22w17a)
+  if [[ -n $ENFORCE_SECURE_PROFILE ]]; then
+    if [[ "${ENFORCE_SECURE_PROFILE,,}" == "true" ]] || [[ "${ENFORCE_SECURE_PROFILE,,}" == "false" ]]; then
+      sed -i "s/enforce-secure-profile=.*/enforce-secure-profile=${ENFORCE_SECURE_PROFILE}/" "${SERVER_PROPERTIES}"
+    else
+      echo "ERROR: Invalid option for ENFORCE_WHITELIST!"
+      echo "Options are: 'true' or 'false'"
+      exit 1
+    fi
+  fi
   #ENFORCE_WHITELIST
-  if [[ "x${ENFORCE_WHITELIST}" != "x" ]]; then
-    if [[ "x${ENFORCE_WHITELIST,,}" == "xtrue" ]] || [[ "x${ENFORCE_WHITELIST,,}" == "xfalse" ]]; then
-      sed -i "s/enforce-whitelist=.*/enforce-whitelist=${ENFORCE_WHITELIST}/" $SERVER_PROPERTIES
+  if [[ -n $ENFORCE_WHITELIST ]]; then
+    if [[ "${ENFORCE_WHITELIST,,}" == "true" ]] || [[ "${ENFORCE_WHITELIST,,}" == "false" ]]; then
+      sed -i "s/enforce-whitelist=.*/enforce-whitelist=${ENFORCE_WHITELIST}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for ENFORCE_WHITELIST!"
       echo "Options are: 'true' or 'false'"
@@ -110,18 +131,18 @@ update_server_properties() {
     fi
   fi
   #ENTITY_BROADCAST_RANGE_PERCENTAGE
-  if [[ "x${ENTITY_BROADCAST_RANGE_PERCENTAGE}" != "x" ]]; then
+  if [[ -n $ENTITY_BROADCAST_RANGE_PERCENTAGE ]]; then
     if [[ "${ENTITY_BROADCAST_RANGE_PERCENTAGE}" -gt 9 ]] && [[ "${ENTITY_BROADCAST_RANGE_PERCENTAGE}" -lt 1001 ]]; then
-      sed -i "s/entity-broadcast-range-percentage=.*/entity-broadcast-range-percentage=${ENTITY_BROADCAST_RANGE_PERCENTAGE}/" $SERVER_PROPERTIES
+      sed -i "s/entity-broadcast-range-percentage=.*/entity-broadcast-range-percentage=${ENTITY_BROADCAST_RANGE_PERCENTAGE}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: ENTITY_BROADCAST_RANGE_PERCENTAGE must be a number between 10-1000!"
       exit 1
     fi
   fi
   #FORCE_GAMEMODE
-  if [[ "x${FORCE_GAMEMODE}" != "x" ]]; then
-    if [[ "x${FORCE_GAMEMODE,,}" == "xtrue" ]] || [[ "x${FORCE_GAMEMODE,,}" == "xfalse" ]]; then
-      sed -i "s/force-gamemode=.*/force-gamemode=${FORCE_GAMEMODE}/" $SERVER_PROPERTIES
+  if [[ -n $FORCE_GAMEMODE ]]; then
+    if [[ "${FORCE_GAMEMODE,,}" == "true" ]] || [[ "${FORCE_GAMEMODE,,}" == "false" ]]; then
+      sed -i "s/force-gamemode=.*/force-gamemode=${FORCE_GAMEMODE}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for FORCE_GAMEMODE!"
       echo "Options are: 'true' or 'false'"
@@ -129,18 +150,18 @@ update_server_properties() {
     fi
   fi
   #FUNCTION_PERMISSION_LEVEL
-  if [[ "x${FUNCTION_PERMISSION_LEVEL}" != "x" ]]; then
+  if [[ -n $FUNCTION_PERMISSION_LEVEL ]]; then
     if [[ "${FUNCTION_PERMISSION_LEVEL}" -gt 0 ]] && [[ "${FUNCTION_PERMISSION_LEVEL}" -lt 5 ]]; then
-      sed -i "s/function-permission-level=.*/function-permission-level=${FUNCTION_PERMISSION_LEVEL}/" $SERVER_PROPERTIES
+      sed -i "s/function-permission-level=.*/function-permission-level=${FUNCTION_PERMISSION_LEVEL}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: FUNCTION_PERMISSION_LEVEL must be a number between 1-4!"
       exit 1
     fi
   fi
   #GAME_MODE
-  if [[ "x${GAME_MODE}" != "x" ]]; then
-    if [[ "x${GAME_MODE,,}" == "xsurvival" ]] || [[ "x${GAME_MODE,,}" == "xcreative" ]] || [[ "x${GAME_MODE,,}" == "xadventure" ]] || [[ "x${GAME_MODE,,}" == "xspectator" ]]; then
-      sed -i "s/gamemode=.*/gamemode=${GAME_MODE}/" $SERVER_PROPERTIES
+  if [[ -n $GAME_MODE ]]; then
+    if [[ "${GAME_MODE,,}" == "survival" ]] || [[ "${GAME_MODE,,}" == "creative" ]] || [[ "${GAME_MODE,,}" == "adventure" ]] || [[ "${GAME_MODE,,}" == "spectator" ]]; then
+      sed -i "s/gamemode=.*/gamemode=${GAME_MODE}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for GAME_MODE!"
       echo "Options are: 'survival', 'creative', 'adventure', or 'spectator'"
@@ -148,9 +169,9 @@ update_server_properties() {
     fi
   fi
   #GENERATE_STRUCTURES
-  if [[ "x${GENERATE_STRUCTURES}" != "x" ]]; then
-    if [[ "x${GENERATE_STRUCTURES,,}" == "xtrue" ]] || [[ "x${GENERATE_STRUCTURES,,}" == "xfalse" ]]; then
-      sed -i "s/generate-structures=.*/generate-structures=${GENERATE_STRUCTURES}/" $SERVER_PROPERTIES
+  if [[ -n $GENERATE_STRUCTURES ]]; then
+    if [[ "${GENERATE_STRUCTURES,,}" == "true" ]] || [[ "${GENERATE_STRUCTURES,,}" == "false" ]]; then
+      sed -i "s/generate-structures=.*/generate-structures=${GENERATE_STRUCTURES}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for GENERATE_STRUCTURES!"
       echo "Options are: 'true' or 'false'"
@@ -158,45 +179,61 @@ update_server_properties() {
     fi
   fi
   #HARDCORE
-  if [[ "x${HARDCORE}" != "x" ]]; then
-    if [[ "x${HARDCORE,,}" == "xtrue" ]] || [[ "x${HARDCORE,,}" == "xfalse" ]]; then
-      sed -i "s/hardcore=.*/hardcore=${HARDCORE}/" $SERVER_PROPERTIES
+  if [[ -n $HARDCORE ]]; then
+    if [[ "${HARDCORE,,}" == "true" ]] || [[ "${HARDCORE,,}" == "false" ]]; then
+      sed -i "s/hardcore=.*/hardcore=${HARDCORE}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for HARDCORE!"
       echo "Options are: 'true' or 'false'"
       exit 1
     fi
   fi
+  #HIDE_ONLINE_PLAYERS - Added 1.18 (21w44a)
+  if [[ -n $HIDE_ONLINE_PLAYERS ]]; then
+    if [[ "${HIDE_ONLINE_PLAYERS,,}" == "true" ]] || [[ "${HIDE_ONLINE_PLAYERS,,}" == "false" ]]; then
+      sed -i "s/hide-online-players=.*/hide-online-players=${HIDE_ONLINE_PLAYERS}/" "${SERVER_PROPERTIES}"
+    else
+      echo "ERROR: Invalid option for HIDE_ONLINE_PLAYERS!"
+      echo "Options are: 'true' or 'false'"
+      exit 1
+    fi
+  fi
   #LEVEL_NAME
-  if [[ "x${LEVEL_NAME}" != "x" ]]; then
-    sed -i "s/level-name=.*/level-name=${LEVEL_NAME}/" $SERVER_PROPERTIES
+  if [[ -n $LEVEL_NAME ]]; then
+    sed -i "s/level-name=.*/level-name=${LEVEL_NAME}/" "${SERVER_PROPERTIES}"
     #TODO: Add logic to check for legal file names
   fi
   #LEVEL_SEED
-  if [[ "x${LEVEL_SEED}" != "x" ]] || [ -f "${DATA_PATH}/seed.txt" ]; then
+  if [[ -n $LEVEL_SEED ]] || [ -f "${DATA_PATH}/seed.txt" ]; then
     #If seed.txt exists, use its value instead of ENV
     if [ -f "${DATA_PATH}/seed.txt" ]; then
       echo "Using seed from existing world's seed.txt file!"
-      LEVEL_SEED=$(cat $DATA_PATH/seed.txt)
+      LEVEL_SEED=$(cat "${DATA_PATH}/seed.txt")
     #If ENV is random then choose one from list
-    elif [[ "x${LEVEL_SEED,,}" == "xrandom" ]]; then
+    elif [[ "${LEVEL_SEED,,}" == "random" ]]; then
       echo "Choosing random seed from integrated seeds list."
-      LEVEL_SEED=$(sort $SEEDS_FILE -uR | head -n 1)
+      LEVEL_SEED=$(sort "${SEEDS_FILE}" -uR | head -n 1)
     fi
-    echo $LEVEL_SEED > $DATA_PATH/seed.txt
-    sed -i "s/level-seed=.*/level-seed=${LEVEL_SEED}/" $SERVER_PROPERTIES
+    echo "${LEVEL_SEED}" > "${DATA_PATH}/seed.txt"
+    sed -i "s/level-seed=.*/level-seed=${LEVEL_SEED}/" "${SERVER_PROPERTIES}"
     #level-seed missing from recent downloads, insert if env var exists
-    if [[ $(cat $SERVER_PROPERTIES | grep "level-seed" | wc -l) -eq 0 ]]; then
-      echo "level-seed="${LEVEL_SEED^^} >> $SERVER_PROPERTIES
+    # shellcheck disable=SC2002
+    # shellcheck disable=SC2126
+    if [[ $(cat "${SERVER_PROPERTIES}" | grep "level-seed" | wc -l) -eq 0 ]]; then
+      # shellcheck disable=SC2086
+      echo "level-seed="${LEVEL_SEED^^} >> "${SERVER_PROPERTIES}"
     fi
   fi
   #LEVEL_TYPE
-  if [[ "x${LEVEL_TYPE}" != "x" ]]; then
-    if [[ "x${LEVEL_TYPE,,}" == "xdefault" ]] || [[ "x${LEVEL_TYPE,,}" == "xflat" ]] || [[ "x${LEVEL_TYPE,,}" == "xlargebiomes" ]] || [[ "x${LEVEL_TYPE,,}" == "xamplified" ]]; then
-      sed -i "s/level-type=.*/level-type=${LEVEL_TYPE^^}/" $SERVER_PROPERTIES
+  if [[ -n $LEVEL_TYPE ]]; then
+    if [[ "${LEVEL_TYPE,,}" == "default" ]] || [[ "${LEVEL_TYPE,,}" == "flat" ]] || [[ "${LEVEL_TYPE,,}" == "largebiomes" ]] || [[ "${LEVEL_TYPE,,}" == "amplified" ]]; then
+      sed -i "s/level-type=.*/level-type=${LEVEL_TYPE^^}/" "${SERVER_PROPERTIES}"
       #level-type missing from recent downloads, insert if env var exists
-      if [[ $(cat $SERVER_PROPERTIES | grep "level-type" | wc -l) -eq 0 ]]; then
-        echo "level-type="${LEVEL_TYPE^^} >> $SERVER_PROPERTIES
+      # shellcheck disable=SC2002
+      # shellcheck disable=SC2126
+      if [[ $(cat "${SERVER_PROPERTIES}" | grep "level-type" | wc -l) -eq 0 ]]; then
+        # shellcheck disable=SC2086
+        echo "level-type="${LEVEL_TYPE^^} >> "${SERVER_PROPERTIES}"
       fi
     else
       echo "ERROR: Invalid option for LEVEL_TYPE!"
@@ -204,42 +241,52 @@ update_server_properties() {
       exit 1
     fi
   fi
+  #LOG_IPS
+  if [[ -n $LOG_IPS ]]; then
+    if [[ "${LOG_IPS,,}" == "true" ]] || [[ "${LOG_IPS,,}" == "false" ]]; then
+      sed -i "s/log-ips=.*/log-ips=${LOG_IPS}/" "${SERVER_PROPERTIES}"
+    else
+      echo "ERROR: Invalid option for LOG_IPS!"
+      echo "Options are: 'true' or 'false'"
+      exit 1
+    fi
+  fi
   #MAX_PLAYERS
-  if [[ "x${MAX_PLAYERS}" != "x" ]]; then
+  if [[ -n $MAX_PLAYERS ]]; then
     if [[ "${MAX_PLAYERS}" =~ ^[0-9]+$ ]]; then
-      sed -i "s/max-players=.*/max-players=${MAX_PLAYERS}/" $SERVER_PROPERTIES
+      sed -i "s/max-players=.*/max-players=${MAX_PLAYERS}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: MAX_PLAYERS must be a number!"
       exit 1
     fi
   fi
   #MAX_TICK_TIME
-  if [[ "x${MAX_TICK_TIME}" != "x" ]]; then
-    sed -i "s/max-tick-time=.*/max-tick-time=${MAX_TICK_TIME}/" $SERVER_PROPERTIES
+  if [[ -n $MAX_TICK_TIME ]]; then
+    sed -i "s/max-tick-time=.*/max-tick-time=${MAX_TICK_TIME}/" "${SERVER_PROPERTIES}"
   fi
   #MAX_WORLD_SIZE
-  if [[ "x${MAX_WORLD_SIZE}" != "x" ]]; then
+  if [[ -n $MAX_WORLD_SIZE ]]; then
     if [[ "${MAX_WORLD_SIZE}" -gt 0 ]] && [[ "${MAX_WORLD_SIZE}" -lt 29999985 ]]; then
-      sed -i "s/max-world-siz=.*/max-world-siz=${MAX_WORLD_SIZE}/" $SERVER_PROPERTIES
+      sed -i "s/max-world-siz=.*/max-world-siz=${MAX_WORLD_SIZE}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: MAX_WORLD_SIZE must be a number between 1-29999984!"
       exit 1
     fi
   fi
   #MOTD
-  if [[ "x${MOTD}" != "x" ]]; then
-    sed -i "s/motd=.*/motd=${MOTD}/" $SERVER_PROPERTIES
+  if [[ -n $MOTD ]]; then
+    sed -i "s/motd=.*/motd=${MOTD}/" "${SERVER_PROPERTIES}"
   else
-    sed -i "s/motd=.*/motd=${SERVER_NAME}/" $SERVER_PROPERTIES
+    sed -i "s/motd=.*/motd=${SERVER_NAME}/" "${SERVER_PROPERTIES}"
   fi
   #NETWORK_COMPRESSION_THRESHOLD
-  if [[ "x${NETWORK_COMPRESSION_THRESHOLD}" != "x" ]]; then
-    sed -i "s/network-compression-threshold=.*/network-compression-threshold=${NETWORK_COMPRESSION_THRESHOLD}/" $SERVER_PROPERTIES
+  if [[ -n $NETWORK_COMPRESSION_THRESHOLD ]]; then
+    sed -i "s/network-compression-threshold=.*/network-compression-threshold=${NETWORK_COMPRESSION_THRESHOLD}/" "${SERVER_PROPERTIES}"
   fi
   #ONLINE_MODE
-  if [[ "x${ONLINE_MODE}" != "x" ]]; then
-    if [[ "x${ONLINE_MODE,,}" == "xtrue" ]] || [[ "x${ONLINE_MODE,,}" == "xfalse" ]]; then
-      sed -i "s/online-mode=.*/online-mode=${ONLINE_MODE}/" $SERVER_PROPERTIES
+  if [[ -n $ONLINE_MODE ]]; then
+    if [[ "${ONLINE_MODE,,}" == "true" ]] || [[ "${ONLINE_MODE,,}" == "false" ]]; then
+      sed -i "s/online-mode=.*/online-mode=${ONLINE_MODE}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for ONLINE_MODE!"
       echo "Options are: 'true' or 'false'"
@@ -247,27 +294,27 @@ update_server_properties() {
     fi
   fi
   #OP_PERMISSION_LEVEL
-  if [[ "x${OP_PERMISSION_LEVEL}" != "x" ]]; then
+  if [[ -n $OP_PERMISSION_LEVEL ]]; then
     if [[ "${OP_PERMISSION_LEVEL}" =~ ^[0-4]+$ ]]; then
-      sed -i "s/op-permission-level=.*/op-permission-level=${OP_PERMISSION_LEVEL}/" $SERVER_PROPERTIES
+      sed -i "s/op-permission-level=.*/op-permission-level=${OP_PERMISSION_LEVEL}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: OP_PERMISSION_LEVEL must be zero or a positive number less than 5!"
       exit 1
     fi
   fi
   #PLAYER_IDLE_TIMEOUT
-  if [[ "x${PLAYER_IDLE_TIMEOUT}" != "x" ]]; then
+  if [[ -n $PLAYER_IDLE_TIMEOUT ]]; then
     if [[ "${PLAYER_IDLE_TIMEOUT}" =~ ^[0-9]+$ ]]; then
-      sed -i "s/player-idle-timeout=.*/player-idle-timeout=${PLAYER_IDLE_TIMEOUT}/" $SERVER_PROPERTIES
+      sed -i "s/player-idle-timeout=.*/player-idle-timeout=${PLAYER_IDLE_TIMEOUT}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: PLAYER_IDLE_TIMEOUT must be zero or a positive number!"
       exit 1
     fi
   fi
   #PREVENT_PROXY_CONNECTIONS
-  if [[ "x${PREVENT_PROXY_CONNECTIONS}" != "x" ]]; then
-    if [[ "x${PREVENT_PROXY_CONNECTIONS,,}" == "xtrue" ]] || [[ "x${PREVENT_PROXY_CONNECTIONS,,}" == "xfalse" ]]; then
-      sed -i "s/prevent-proxy-connections=.*/prevent-proxy-connections=${PREVENT_PROXY_CONNECTIONS}/" $SERVER_PROPERTIES
+  if [[ -n $PREVENT_PROXY_CONNECTIONS ]]; then
+    if [[ "${PREVENT_PROXY_CONNECTIONS,,}" == "true" ]] || [[ "${PREVENT_PROXY_CONNECTIONS,,}" == "false" ]]; then
+      sed -i "s/prevent-proxy-connections=.*/prevent-proxy-connections=${PREVENT_PROXY_CONNECTIONS}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for PREVENT_PROXY_CONNECTIONS!"
       echo "Options are: 'true' or 'false'"
@@ -275,9 +322,9 @@ update_server_properties() {
     fi
   fi
   #PVP
-  if [[ "x${PVP}" != "x" ]]; then
-    if [[ "x${PVP,,}" == "xtrue" ]] || [[ "x${PVP,,}" == "xfalse" ]]; then
-      sed -i "s/pvp=.*/pvp=${PVP}/" $SERVER_PROPERTIES
+  if [[ -n $PVP ]]; then
+    if [[ "${PVP,,}" == "true" ]] || [[ "${PVP,,}" == "false" ]]; then
+      sed -i "s/pvp=.*/pvp=${PVP}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for PVP!"
       echo "Options are: 'true' or 'false'"
@@ -285,40 +332,50 @@ update_server_properties() {
     fi
   fi
   #QUERY_PORT
-  if [[ "x${QUERY_PORT}" != "x" ]]; then
+  if [[ -n $QUERY_PORT ]]; then
     if [[ "${QUERY_PORT}" -gt 0 ]] && [[ "${QUERY_PORT}" -lt 65536 ]]; then
-      sed -i "s/query.port=.*/query.port=${QUERY_PORT}/" $SERVER_PROPERTIES
+      sed -i "s/query.port=.*/query.port=${QUERY_PORT}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: QUERY_PORT must be a number between 1-65535!"
       exit 1
     fi
   fi
   #RATE_LIMIT
-  if [[ "x${RATE_LIMIT}" != "x" ]]; then
+  if [[ -n $RATE_LIMIT ]]; then
     if [[ "${RATE_LIMIT}" =~ ^[0-9]+$ ]]; then
-      sed -i "s/rate-limit=.*/rate-limit=${RATE_LIMIT}/" $SERVER_PROPERTIES
+      sed -i "s/rate-limit=.*/rate-limit=${RATE_LIMIT}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: RATE_LIMIT must be a positive number!"
       exit 1
     fi
   fi
   #RCON_PASSWORD
-  if [[ "x${RCON_PASSWORD}" != "x" ]]; then
-    sed -i "s/rcon.password=.*/rcon.password=${RCON_PASSWORD}/" $SERVER_PROPERTIES
+  if [[ -n $RCON_PASSWORD ]]; then
+    sed -i "s/rcon.password=.*/rcon.password=${RCON_PASSWORD}/" "${SERVER_PROPERTIES}"
   fi
   #RCON_PORT
-  if [[ "x${RCON_PORT}" != "x" ]]; then
+  if [[ -n $RCON_PORT ]]; then
     if [[ "${RCON_PORT}" -gt 0 ]] && [[ "${RCON_PORT}" -lt 65536 ]]; then
-      sed -i "s/rcon.port=.*/rcon.port=${RCON_PORT}/" $SERVER_PROPERTIES
+      sed -i "s/rcon.port=.*/rcon.port=${RCON_PORT}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: RCON_PORT must be a number between 1-65535!"
       exit 1
     fi
   fi
+  #REGION_FILE_COMPRESSION
+  if [[ -n $REGION_FILE_COMPRESSION ]]; then
+    if [[ "${REGION_FILE_COMPRESSION,,}" == "deflate" ]] || [[ "${REGION_FILE_COMPRESSION,,}" == "lz4" ]] || [[ "${REGION_FILE_COMPRESSION,,}" == "none" ]]; then
+      sed -i "s/region-file-compression=.*/region-file-compression=${REGION_FILE_COMPRESSION}/" "${SERVER_PROPERTIES}"
+    else
+      echo "ERROR: Invalid option for REGION_FILE_COMPRESSION!"
+      echo "Options are: 'deflate', 'lz4', or 'none'"
+      exit 1
+    fi
+  fi
   #REQUIRE_RESOURCE_PACK
-  if [[ "x${REQUIRE_RESOURCE_PACK}" != "x" ]]; then
-    if [[ "x${REQUIRE_RESOURCE_PACK,,}" == "xtrue" ]] || [[ "x${REQUIRE_RESOURCE_PACK,,}" == "xfalse" ]]; then
-      sed -i "s/require-resource-pack=.*/require-resource-pack=${REQUIRE_RESOURCE_PACK}/" $SERVER_PROPERTIES
+  if [[ -n $REQUIRE_RESOURCE_PACK ]]; then
+    if [[ "${REQUIRE_RESOURCE_PACK,,}" == "true" ]] || [[ "${REQUIRE_RESOURCE_PACK,,}" == "false" ]]; then
+      sed -i "s/require-resource-pack=.*/require-resource-pack=${REQUIRE_RESOURCE_PACK}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for REQUIRE_RESOURCE_PACK!"
       echo "Options are: 'true' or 'false'"
@@ -326,40 +383,44 @@ update_server_properties() {
     fi
   fi
   #RESOURCE_PACK
-  if [[ "x${RESOURCE_PACK}" != "x" ]]; then
-    sed -i "s/resource-pack=.*/resource-pack=${RESOURCE_PACK}/" $SERVER_PROPERTIES
+  if [[ -n $RESOURCE_PACK ]]; then
+    sed -i "s/resource-pack=.*/resource-pack=${RESOURCE_PACK}/" "${SERVER_PROPERTIES}"
   fi
   #RESOURCE_PACK_PROMPT
-  if [[ "x${RESOURCE_PACK_PROMPT}" != "x" ]]; then
-    sed -i "s/resource-pack-prompt=.*/resource-pack-prompt=${RESOURCE_PACK_PROMPT}/" $SERVER_PROPERTIES
+  if [[ -n $RESOURCE_PACK_PROMPT ]]; then
+    sed -i "s/resource-pack-prompt=.*/resource-pack-prompt=${RESOURCE_PACK_PROMPT}/" "${SERVER_PROPERTIES}"
   fi
   #RESOURCE_PACK_SHA1
-  if [[ "x${RESOURCE_PACK_SHA1}" != "x" ]]; then
-    sed -i "s/resource-pack-sha1=.*/resource-pack-sha1=${RESOURCE_PACK_SHA1}/" $SERVER_PROPERTIES
+  if [[ -n $RESOURCE_PACK_SHA1 ]]; then
+    sed -i "s/resource-pack-sha1=.*/resource-pack-sha1=${RESOURCE_PACK_SHA1}/" "${SERVER_PROPERTIES}"
+  fi
+  #SERVER_IP
+  if [[ -n $SERVER_IP ]]; then
+    sed -i "s/server-ip=.*/server-ip=${SERVER_IP}/" "${SERVER_PROPERTIES}"
   fi
   #SERVER_PORT
-  if [[ "x${SERVER_PORT}" != "x" ]]; then
+  if [[ -n $SERVER_PORT ]]; then
     if [[ "${SERVER_PORT}" -gt 0 ]] && [[ "${SERVER_PORT}" -lt 65536 ]]; then
-      sed -i "s/server-port=.*/server-port=${SERVER_PORT}/" $SERVER_PROPERTIES
+      sed -i "s/server-port=.*/server-port=${SERVER_PORT}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: SERVER_PORT must be a number between 1-65535!"
       exit 1
     fi
   fi
-  #SNOOPER_ENABLED
-  if [[ "x${SNOOPER_ENABLED}" != "x" ]]; then
-    if [[ "x${SNOOPER_ENABLED,,}" == "xtrue" ]] || [[ "x${SNOOPER_ENABLED,,}" == "xfalse" ]]; then
-      sed -i "s/snooper-enabled=.*/snooper-enabled=${SNOOPER_ENABLED}/" $SERVER_PROPERTIES
+  #SIMULATION_DISTANCE - Added 1.18 (21w38a)
+  if [[ -n $SIMULATION_DISTANCE ]]; then
+    if [[ "${SIMULATION_DISTANCE}" -gt 2 ]] && [[ "${SIMULATION_DISTANCE}" -lt 33 ]]; then
+      sed -i "s/simulation-distance=.*/simulation-distance=${SIMULATION_DISTANCE}/" "${SERVER_PROPERTIES}"
     else
-      echo "ERROR: Invalid option for SNOOPER_ENABLED!"
-      echo "Options are: 'true' or 'false'"
+      echo "ERROR: SIMULATION_DISTANCE must be a positive number between 3-32!"
       exit 1
     fi
   fi
+  ###
   #SPAWN_ANIMALS
-  if [[ "x${SPAWN_ANIMALS}" != "x" ]]; then
-    if [[ "x${SPAWN_ANIMALS,,}" == "xtrue" ]] || [[ "x${SPAWN_ANIMALS,,}" == "xfalse" ]]; then
-      sed -i "s/spawn-animals=.*/spawn-animals=${SPAWN_ANIMALS}/" $SERVER_PROPERTIES
+  if [[ -n $SPAWN_ANIMALS ]]; then
+    if [[ "${SPAWN_ANIMALS,,}" == "true" ]] || [[ "${SPAWN_ANIMALS,,}" == "false" ]]; then
+      sed -i "s/spawn-animals=.*/spawn-animals=${SPAWN_ANIMALS}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for SPAWN_ANIMALS!"
       echo "Options are: 'true' or 'false'"
@@ -367,19 +428,20 @@ update_server_properties() {
     fi
   fi
   #SPAWN_MONSTERS
-  if [[ "x${SPAWN_MONSTERS}" != "x" ]]; then
-    if [[ "x${SPAWN_MONSTERS,,}" == "xtrue" ]] || [[ "x${SPAWN_MONSTERS,,}" == "xfalse" ]]; then
-      sed -i "s/spawn-monsters=.*/spawn-monsters=${SPAWN_MONSTERS}/" $SERVER_PROPERTIES
+  if [[ -n $SPAWN_MONSTERS ]]; then
+    if [[ "${SPAWN_MONSTERS,,}" == "true" ]] || [[ "${SPAWN_MONSTERS,,}" == "false" ]]; then
+      sed -i "s/spawn-monsters=.*/spawn-monsters=${SPAWN_MONSTERS}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for SPAWN_MONSTERS!"
       echo "Options are: 'true' or 'false'"
       exit 1
     fi
   fi
+  ###
   #SPAWN_NPCS
-  if [[ "x${SPAWN_NPCS}" != "x" ]]; then
-    if [[ "x${SPAWN_NPCS,,}" == "xtrue" ]] || [[ "x${SPAWN_NPCS,,}" == "xfalse" ]]; then
-      sed -i "s/spawn-npcs=.*/spawn-npcs=${SPAWN_NPCS}/" $SERVER_PROPERTIES
+  if [[ -n $SPAWN_NPCS ]]; then
+    if [[ "${SPAWN_NPCS,,}" == "true" ]] || [[ "${SPAWN_NPCS,,}" == "false" ]]; then
+      sed -i "s/spawn-npcs=.*/spawn-npcs=${SPAWN_NPCS}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for SPAWN_NPCS!"
       echo "Options are: 'true' or 'false'"
@@ -387,18 +449,18 @@ update_server_properties() {
     fi
   fi
   #SPAWN_PROTECTION
-  if [[ "x${SPAWN_PROTECTION}" != "x" ]]; then
+  if [[ -n $SPAWN_PROTECTION ]]; then
     if [[ "${SPAWN_PROTECTION}" =~ ^[0-9]+$ ]]; then
-      sed -i "s/spawn-protection=.*/spawn-protection=${SPAWN_PROTECTION}/" $SERVER_PROPERTIES
+      sed -i "s/spawn-protection=.*/spawn-protection=${SPAWN_PROTECTION}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: SPAWN_PROTECTION must be a positive number!"
       exit 1
     fi
   fi
   #SYNC_CHUNK_WRITES
-  if [[ "x${SYNC_CHUNK_WRITES}" != "x" ]]; then
-    if [[ "x${SYNC_CHUNK_WRITES,,}" == "xtrue" ]] || [[ "x${SYNC_CHUNK_WRITES,,}" == "xfalse" ]]; then
-      sed -i "s/sync-chunk-writes=.*/sync-chunk-writes=${SYNC_CHUNK_WRITES}/" $SERVER_PROPERTIES
+  if [[ -n $SYNC_CHUNK_WRITES ]]; then
+    if [[ "${SYNC_CHUNK_WRITES,,}" == "true" ]] || [[ "${SYNC_CHUNK_WRITES,,}" == "false" ]]; then
+      sed -i "s/sync-chunk-writes=.*/sync-chunk-writes=${SYNC_CHUNK_WRITES}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for SYNC_CHUNK_WRITES!"
       echo "Options are: 'true' or 'false'"
@@ -406,13 +468,13 @@ update_server_properties() {
     fi
   fi
   #TEXT_FILTERING_CONFIG
-  if [[ "x${TEXT_FILTERING_CONFIG}" != "x" ]]; then
-    sed -i "s/text-filtering-config=.*/text-filtering-config=${TEXT_FILTERING_CONFIG}/" $SERVER_PROPERTIES
+  if [[ -n $TEXT_FILTERING_CONFIG ]]; then
+    sed -i "s/text-filtering-config=.*/text-filtering-config=${TEXT_FILTERING_CONFIG}/" "${SERVER_PROPERTIES}"
   fi
   #USE_NATIVE_TRANSPORT
-  if [[ "x${USE_NATIVE_TRANSPORT}" != "x" ]]; then
-    if [[ "x${USE_NATIVE_TRANSPORT,,}" == "xtrue" ]] || [[ "x${USE_NATIVE_TRANSPORT,,}" == "xfalse" ]]; then
-      sed -i "s/use-native-transport=.*/use-native-transport=${USE_NATIVE_TRANSPORT}/" $SERVER_PROPERTIES
+  if [[ -n $USE_NATIVE_TRANSPORT ]]; then
+    if [[ "${USE_NATIVE_TRANSPORT,,}" == "true" ]] || [[ "${USE_NATIVE_TRANSPORT,,}" == "false" ]]; then
+      sed -i "s/use-native-transport=.*/use-native-transport=${USE_NATIVE_TRANSPORT}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: Invalid option for USE_NATIVE_TRANSPORT!"
       echo "Options are: 'true' or 'false'"
@@ -420,23 +482,24 @@ update_server_properties() {
     fi
   fi
   #VIEW_DISTANCE
-  if [[ "x${VIEW_DISTANCE}" != "x" ]]; then
+  if [[ -n $VIEW_DISTANCE ]]; then
     if [[ "${VIEW_DISTANCE}" -gt 2 ]] && [[ "${VIEW_DISTANCE}" -lt 33 ]]; then
-      sed -i "s/view-distance=.*/view-distance=${VIEW_DISTANCE}/" $SERVER_PROPERTIES
+      sed -i "s/view-distance=.*/view-distance=${VIEW_DISTANCE}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: VIEW_DISTANCE must be a positive number between 3-32!"
       exit 1
     fi
   fi
   #WHITELIST_ENABLE
-  if [[ "x${WHITELIST_ENABLE}" != "x" ]]; then
-    if [[ "x${WHITELIST_ENABLE,,}" == "xtrue" ]] || [[ "x${WHITELIST_ENABLE,,}" == "xfalse" ]]; then
-      if [[ "x${WHITELIST_ENABLE,,}" == "xtrue" ]]; then
+  if [[ -n $WHITELIST_ENABLE ]]; then
+    if [[ "${WHITELIST_ENABLE,,}" == "true" ]] || [[ "${WHITELIST_ENABLE,,}" == "false" ]]; then
+      if [[ "${WHITELIST_ENABLE,,}" == "true" ]]; then
+        # shellcheck disable=SC2268
         if [[ "x${WHITELIST_USERS}" == "x" ]] && [[ "x${OPERATORS}" == "x" ]]; then
           echo "ERROR: If WHITELIST_ENABLE is true then either WHITELIST_USERS or OPERATORS must not be empty!"
           exit 1
         fi
-        sed -i "s/white-list=.*/white-list=${WHITELIST_ENABLE}/" $SERVER_PROPERTIES
+        sed -i "s/white-list=.*/white-list=${WHITELIST_ENABLE}/" "${SERVER_PROPERTIES}"
       fi
     else
       echo "ERROR: Invalid option for WHITELIST_ENABLE!"

@@ -117,13 +117,6 @@ docker volume create mcje-data
 docker run -d -it -p 25565:25565 -v mcje-data:/mcje/data -e EULA=true cubeworx/mcje-server
 ```
 
-## CubeWorx API
-
-The CubeWorx API is being developed to help with automatically looking up information such as: versions, usernames, uuids, etc. This API is currently **exerimental** and not guaranteed. If you experience issues with the API returning the correct information you can:
-
-- Try setting `USER_LOOKUP_URL=https://sessionserver.mojang.com/session/minecraft/profile` & `UUID_LOOKUP_URL=https://api.mojang.com/users/profiles/minecraft`
-- Set `OPERATORS_LOOKUP="false"` and `WHITELIST_LOOKUP="false"`
-
 ## Whitelist
 
 The whitelist is the list of player usernames that are allowed to connect to your server when `WHITELIST_ENABLE="true"` which should be set if your server is going to be publicly accessible. By default the whitelist file gets overwritten whenever the container starts/restarts to ensure that the usernames match what is in the config.
