@@ -48,15 +48,13 @@ The following environment variables are basic ones that you might want to change
 - `PVP`
 - `SERVER_NAME`
 - `SERVER_PORT`
-- `SPAWN_ANIMALS`
 - `SPAWN_MONSTERS`
-- `SPAWN_NPCS`
-
 
 ### Advanced Server Properties Environment Variables
 
 The following environment variables are more advanced ones that you might want to change to optimize the management or performance of your server.
 
+- `ACCEPT_TRANSFERS`
 - `ALLOW_FLIGHT`
 - `BROADCAST_CONSOLE_TO_OPS`
 - `BROADCAST_RCON_TO_OPS`
@@ -65,30 +63,37 @@ The following environment variables are more advanced ones that you might want t
 - `ENABLE_QUERY`
 - `ENABLE_RCON`
 - `ENABLE_STATUS`
+- `ENFORCE_SECURE_PROFILE`
 - `ENFORCE_WHITELIST`
 - `ENTITY_BROADCAST_RANGE_PERCENTAGE`
 - `FORCE_GAMEMODE`
 - `FUNCTION_PERMISSION_LEVEL`
 - `GENERATE_STRUCTURES`
+- `HIDE_ONLINE_PLAYERS`
+- `LOG_IPS`
+- `MAX_CHAINED_NEIGHBOR_UPDATES`
 - `MAX_PLAYERS`
 - `MAX_TICK_TIME`
 - `MAX_WORLD_SIZE`
 - `NETWORK_COMPRESSION_THRESHOLD`
 - `OP_PERMISSION_LEVEL`
+- `PAUSE_WHEN_EMPTY_SECONDS`
 - `PLAYER_IDLE_TIMEOUT`
 - `PREVENT_PROXY_CONNECTIONS`
 - `QUERY_PORT`
 - `RATE_LIMIT`
 - `RCON_PASSWORD`
 - `RCON_PORT`
+- `REGION_FILE_COMPRESSION`
 - `REQUIRE_RESOURCE_PACK`
 - `RESOURCE_PACK`
 - `RESOURCE_PACK_PROMPT`
 - `RESOURCE_PACK_SHA1`
-- `SNOOPER_ENABLED`
+- `SIMULATION_DISTANCE`
 - `SPAWN_PROTECTION`
 - `SYNC_CHUNK_WRITES`
 - `TEXT_FILTERING_CONFIG`
+- `TEXT_FILTERING_VERSION`
 - `USE_NATIVE_TRANSPORT`
 - `VIEW_DISTANCE`
 
@@ -116,13 +121,6 @@ docker run -d -it -p 25565:25565 -v $(pwd):/mcje/data -e EULA=true cubeworx/mcje
 docker volume create mcje-data
 docker run -d -it -p 25565:25565 -v mcje-data:/mcje/data -e EULA=true cubeworx/mcje-server
 ```
-
-## CubeWorx API
-
-The CubeWorx API is being developed to help with automatically looking up information such as: versions, usernames, uuids, etc. This API is currently **exerimental** and not guaranteed. If you experience issues with the API returning the correct information you can:
-
-- Try setting `USER_LOOKUP_URL=https://sessionserver.mojang.com/session/minecraft/profile` & `UUID_LOOKUP_URL=https://api.mojang.com/users/profiles/minecraft`
-- Set `OPERATORS_LOOKUP="false"` and `WHITELIST_LOOKUP="false"`
 
 ## Whitelist
 
