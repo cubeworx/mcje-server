@@ -217,31 +217,29 @@ update_server_properties() {
     echo "${LEVEL_SEED}" > "${DATA_PATH}/seed.txt"
     sed -i "s/level-seed=.*/level-seed=${LEVEL_SEED}/" "${SERVER_PROPERTIES}"
     #level-seed missing from recent downloads, insert if env var exists
-    # shellcheck disable=SC2002
     # shellcheck disable=SC2126
-    if [[ $(cat "${SERVER_PROPERTIES}" | grep "level-seed" | wc -l) -eq 0 ]]; then
+    if [[ $(grep "level-seed" "${SERVER_PROPERTIES}" | wc -l) -eq 0 ]]; then
       # shellcheck disable=SC2086
       echo "level-seed="${LEVEL_SEED^^} >> "${SERVER_PROPERTIES}"
     fi
   fi
   #LEVEL_TYPE
   if [[ -n $LEVEL_TYPE ]]; then
-    if [[ "${LEVEL_TYPE,,}" == "default" ]] || [[ "${LEVEL_TYPE,,}" == "flat" ]] || [[ "${LEVEL_TYPE,,}" == "largebiomes" ]] || [[ "${LEVEL_TYPE,,}" == "amplified" ]]; then
+    if [[ "${LEVEL_TYPE,,}" == "normal" ]] || [[ "${LEVEL_TYPE,,}" == "flat" ]] || [[ "${LEVEL_TYPE,,}" == "large_biomes" ]] || [[ "${LEVEL_TYPE,,}" == "amplified" ]] || [[ "${LEVEL_TYPE,,}" == "single_biome_surface" ]]; then
       sed -i "s/level-type=.*/level-type=${LEVEL_TYPE^^}/" "${SERVER_PROPERTIES}"
       #level-type missing from recent downloads, insert if env var exists
-      # shellcheck disable=SC2002
       # shellcheck disable=SC2126
-      if [[ $(cat "${SERVER_PROPERTIES}" | grep "level-type" | wc -l) -eq 0 ]]; then
+      if [[ $(grep "level-type" "${SERVER_PROPERTIES}" | wc -l) -eq 0 ]]; then
         # shellcheck disable=SC2086
         echo "level-type="${LEVEL_TYPE^^} >> "${SERVER_PROPERTIES}"
       fi
     else
       echo "ERROR: Invalid option for LEVEL_TYPE!"
-      echo "Options are: 'default', 'flat', 'largebiomes', or 'amplified'"
+      echo "Options are: 'normal', 'flat', 'large_biomes', 'amplified', or 'single_biome_surface'"
       exit 1
     fi
   fi
-  #LOG_IPS
+  #LOG_IPS - Added 1.20.2	(23w31a)
   if [[ -n $LOG_IPS ]]; then
     if [[ "${LOG_IPS,,}" == "true" ]] || [[ "${LOG_IPS,,}" == "false" ]]; then
       sed -i "s/log-ips=.*/log-ips=${LOG_IPS}/" "${SERVER_PROPERTIES}"
@@ -250,6 +248,10 @@ update_server_properties() {
       echo "Options are: 'true' or 'false'"
       exit 1
     fi
+  fi
+  #MAX_CHAINED_NEIGHBOR_UPDATES - Added 1.19 (22w11a)
+  if [[ -n $MAX_CHAINED_NEIGHBOR_UPDATES ]]; then
+    sed -i "s/max-chained-neighbor-updates=.*/max-chained-neighbor-updates=${MAX_CHAINED_NEIGHBOR_UPDATES}/" "${SERVER_PROPERTIES}"
   fi
   #MAX_PLAYERS
   if [[ -n $MAX_PLAYERS ]]; then
@@ -299,6 +301,15 @@ update_server_properties() {
       sed -i "s/op-permission-level=.*/op-permission-level=${OP_PERMISSION_LEVEL}/" "${SERVER_PROPERTIES}"
     else
       echo "ERROR: OP_PERMISSION_LEVEL must be zero or a positive number less than 5!"
+      exit 1
+    fi
+  fi
+  #PAUSE_WHEN_EMPTY_SECONDS - Added 1.21.2 (24w33a)
+  if [[ -n $PAUSE_WHEN_EMPTY_SECONDS ]]; then
+    if [[ "${PAUSE_WHEN_EMPTY_SECONDS}" =~ ^[0-9]+$ ]]; then
+      sed -i "s/pause-when-empty-seconds=.*/pause-when-empty-seconds=${PAUSE_WHEN_EMPTY_SECONDS}/" "${SERVER_PROPERTIES}"
+    else
+      echo "ERROR: PAUSE_WHEN_EMPTY_SECONDS must be a number!"
       exit 1
     fi
   fi
@@ -362,7 +373,7 @@ update_server_properties() {
       exit 1
     fi
   fi
-  #REGION_FILE_COMPRESSION
+  #REGION_FILE_COMPRESSION - Added 1.20.5	(24w04a)
   if [[ -n $REGION_FILE_COMPRESSION ]]; then
     if [[ "${REGION_FILE_COMPRESSION,,}" == "deflate" ]] || [[ "${REGION_FILE_COMPRESSION,,}" == "lz4" ]] || [[ "${REGION_FILE_COMPRESSION,,}" == "none" ]]; then
       sed -i "s/region-file-compression=.*/region-file-compression=${REGION_FILE_COMPRESSION}/" "${SERVER_PROPERTIES}"
@@ -416,8 +427,7 @@ update_server_properties() {
       exit 1
     fi
   fi
-  ###
-  #SPAWN_ANIMALS
+  #SPAWN_ANIMALS - Removed 1.21.2 (24w33a)
   if [[ -n $SPAWN_ANIMALS ]]; then
     if [[ "${SPAWN_ANIMALS,,}" == "true" ]] || [[ "${SPAWN_ANIMALS,,}" == "false" ]]; then
       sed -i "s/spawn-animals=.*/spawn-animals=${SPAWN_ANIMALS}/" "${SERVER_PROPERTIES}"
@@ -437,8 +447,7 @@ update_server_properties() {
       exit 1
     fi
   fi
-  ###
-  #SPAWN_NPCS
+  #SPAWN_NPCS - Removed 1.21.2 (24w33a)
   if [[ -n $SPAWN_NPCS ]]; then
     if [[ "${SPAWN_NPCS,,}" == "true" ]] || [[ "${SPAWN_NPCS,,}" == "false" ]]; then
       sed -i "s/spawn-npcs=.*/spawn-npcs=${SPAWN_NPCS}/" "${SERVER_PROPERTIES}"
@@ -470,6 +479,16 @@ update_server_properties() {
   #TEXT_FILTERING_CONFIG
   if [[ -n $TEXT_FILTERING_CONFIG ]]; then
     sed -i "s/text-filtering-config=.*/text-filtering-config=${TEXT_FILTERING_CONFIG}/" "${SERVER_PROPERTIES}"
+  fi
+  #TEXT_FILTERING_VERSION - Added 1.21.2
+  if [[ -n $TEXT_FILTERING_VERSION ]]; then
+    if [[ "${TEXT_FILTERING_VERSION}" -eq 0 ]] || [[ "${TEXT_FILTERING_VERSION}" -eq 1 ]]; then
+      sed -i "s/text-filtering-version=.*/text-filtering-version=${TEXT_FILTERING_VERSION}/" "${SERVER_PROPERTIES}"
+    else
+      echo "ERROR: Invalid option for TEXT_FILTERING_VERSION!"
+      echo "Options are: '0' or '1'"
+      exit 1
+    fi
   fi
   #USE_NATIVE_TRANSPORT
   if [[ -n $USE_NATIVE_TRANSPORT ]]; then

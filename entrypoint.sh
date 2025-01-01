@@ -14,12 +14,10 @@ JVM_OPTS=${JVM_OPTS:-""}
 OPERATORS_FILE=${OPERATORS_FILE:-"/mcje/data/ops.json"}
 OPERATORS_LOOKUP=${OPERATORS_LOOKUP:-"true"}
 OPERATORS_MODE=${OPERATORS_MODE:-"static"}
-PLAYERDB_LOOKUP_URL=${PLAYERDB_LOOKUP_URL:-"https://playerdb.co/api/player/xbox"}
+PLAYERDB_LOOKUP_URL=${PLAYERDB_LOOKUP_URL:-"https://playerdb.co/api/player/minecraft"}
 SEEDS_FILE=${SEEDS_FILE:-"/mcje/seeds.txt"}
 SERVER_PATH=${SERVER_PATH:-"/mcje/server"}
 SERVER_PROPERTIES=${SERVER_PROPERTIES:-"/mcje/server/server.properties"}
-USER_LOOKUP_URL=${USER_LOOKUP_URL:-"https://sessionserver.mojang.com/session/minecraft/profile"}
-UUID_LOOKUP_URL=${UUID_LOOKUP_URL:-"https://api.mojang.com/users/profiles/minecraft"}
 VERSION=${VERSION:-"LATEST"}
 VERSIONS_FILE=${VERSIONS_FILE:-"/mcje/versions.txt"}
 VERSIONS_URL=${VERSIONS_URL:-"https://launchermeta.mojang.com/mc/game/version_manifest.json"}
@@ -188,20 +186,23 @@ else
   VERSION=$(cat "${DATA_PATH}/version.txt")
 fi
 #Update server.properties
+# shellcheck disable=SC1091
 source "${MCJE_HOME}/scripts/server-properties.sh"
 update_server_properties
 #Check operators & whitelist
+# shellcheck disable=SC1091
 source "${MCJE_HOME}/scripts/operators-whitelist.sh"
 check_whitelist
 check_operators
 create_cache_files
 #Configure logging
+# shellcheck disable=SC1091
 source "${MCJE_HOME}/scripts/logging.sh"
 configure_logging
 echo "Starting Minecraft Java Server Version ${VERSION} with the following configuration:"
 echo "########## SERVER PROPERTIES ##########"
 # shellcheck disable=SC2002
-cat "${SERVER_PROPERTIES}" | grep "=" | grep -v "\#" | sort
+grep "=" "${SERVER_PROPERTIES}" | grep -v "\#" | sort
 echo "###############################"
 echo ""
 echo "########## OPERATORS ##########"
