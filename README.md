@@ -1,4 +1,4 @@
-[![Build](https://img.shields.io/github/workflow/status/cubeworx/mcje-server/build-push-docker)](https://github.com/cubeworx/mcje-server/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/cubeworx/mcje-server/build-push-docker.yml)](https://github.com/cubeworx/mcje-server/actions)
 [![Docker Pulls](https://img.shields.io/docker/pulls/cubeworx/mcje-server.svg)](https://hub.docker.com/r/cubeworx/mcje-server)
 [![Docker Image Version (latest semver)](https://img.shields.io/docker/v/cubeworx/mcje-server?sort=semver)](https://hub.docker.com/r/cubeworx/mcje-server)
 [![Docker Image Size (tag)](https://img.shields.io/docker/image-size/cubeworx/mcje-server/latest)](https://hub.docker.com/r/cubeworx/mcje-server)
