@@ -80,5 +80,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         if:  github.event_name != 'pull_request'
         with:
-          name: ${{ env.IMG_VER }}
+          name: v${{ env.IMG_VER }}
           generate_release_notes: true
+          tag_name: v${{ env.IMG_VER }}
