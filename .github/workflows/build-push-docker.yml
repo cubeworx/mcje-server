@@ -59,11 +59,11 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: cubeworx/mcje-server:${{ env.IMG_VER }},cubeworx/mcje-server:latest
 
-      - uses: ethomson/send-tweet-action@v1.0.0
+      - uses: nearform-actions/github-action-notify-twitter@master
         if: github.event_name != 'pull_request'
         with:
-          status: "New version of CubeWorx Minecraft Java Edition Server Image released: https://hub.docker.com/r/cubeworx/mcje-server/tags?page=1&ordering=last_updated&name=${{ env.IMG_VER }}"
-          consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
-          consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
-          access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+          message: "New version of CubeWorx Minecraft Java Edition Server Image released: https://hub.docker.com/r/cubeworx/mcje-server/tags?page=1&ordering=last_updated&name=${{ env.IMG_VER }}"
+          twitter-app-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
+          twitter-app-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
+          twitter-access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          twitter-access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
