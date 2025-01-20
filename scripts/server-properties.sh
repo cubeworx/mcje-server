@@ -395,7 +395,11 @@ update_server_properties() {
   fi
   #RESOURCE_PACK
   if [[ -n $RESOURCE_PACK ]]; then
-    sed -i "s/resource-pack=.*/resource-pack=${RESOURCE_PACK}/" "${SERVER_PROPERTIES}"
+    sed -i "s|^resource-pack=.*|resource-pack=${RESOURCE_PACK}|" "${SERVER_PROPERTIES}"
+  fi
+  #RESOURCE_PACK_ID
+  if [[ -n $RESOURCE_PACK_ID ]]; then
+    sed -i "s/resource-pack-id=.*/resource-pack-id=${RESOURCE_PACK_ID}/" "${SERVER_PROPERTIES}"
   fi
   #RESOURCE_PACK_PROMPT
   if [[ -n $RESOURCE_PACK_PROMPT ]]; then
