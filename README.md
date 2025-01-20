@@ -87,6 +87,7 @@ The following environment variables are more advanced ones that you might want t
 - `REGION_FILE_COMPRESSION`
 - `REQUIRE_RESOURCE_PACK`
 - `RESOURCE_PACK`
+- `RESOURCE_PACK_ID`
 - `RESOURCE_PACK_PROMPT`
 - `RESOURCE_PACK_SHA1`
 - `SIMULATION_DISTANCE`
