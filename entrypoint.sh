@@ -172,7 +172,7 @@ if [ ! -f "${SERVER_PATH}/usercache.json" ]; then
   prepare_server_path
   prepare_world_level_path
   # #Check necessary symlinks
-  for LINK_NAME in eula.txt logs ops.json whitelist.json ; do
+  for LINK_NAME in crash-reports eula.txt logs ops.json whitelist.json ; do
     check_symlinks $LINK_NAME
   done
   #Create properties file for specific version
