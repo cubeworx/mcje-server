@@ -3,8 +3,9 @@ cat << EOF > $SERVER_PATH/log4j2.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" packages="com.mojang.util">
     <Appenders>
+        <!-- console logging - logs to stdout -->
         <Console name="SysOut" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %msg%n" />
+            <PatternLayout pattern="[%d{yyyy/MM/dd HH:mm:ss}] [%t/%level]: %msg%n" />
         </Console>
         <Queue name="TerminalConsole">
             <PatternLayout pattern="[%d{HH:mm:ss} %level]: %msg%n" />
